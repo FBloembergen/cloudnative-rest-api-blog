@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 // The DocumentClient class makes it easy to communicate with our table.
 const dbClient = new AWS.DynamoDB.DocumentClient({ region: 'eu-west-1' });
 
-// May want to expand this headers with CORS headers, e.g. Allowed Origin
+// May want to expand these headers with CORS headers, e.g. Allowed Origin
 const defaultHeaders = { 'Content-Type': 'application/json' }
 
 // The actual handler function invoked by Lambda
