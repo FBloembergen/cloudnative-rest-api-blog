@@ -1,0 +1,19 @@
+{
+  "name": "nodejs-rest-api",
+  "version": "1.0.0",
+  "description": "Serverless NodeJS Project",
+  "main": "index.js",
+  "dependencies": {
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.534.0",
+    "serverless": "^1.52.2"
+  },
+  "scripts": {
+    "deploy": "serverless deploy",
+    "package": "serverless package"
+  },
+  "author": "",
+  "license": "ISC"
+}

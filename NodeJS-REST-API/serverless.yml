@@ -1,0 +1,72 @@
+service: nodejs-rest-api
+provider:
+  name: aws
+  runtime: nodejs10.x
+  region: eu-west-1
+  # you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:Scan
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/BlogPosts"
+# Package functions individually to create the smallest deployment package possible
+# Deploying only the bare minimum helps with Lambda cold starts latency, there is simply less to download
+package:
+  individually: true
+  exclude:
+    - ./**
+functions:
+  getAllBlogPosts:
+    handler: src/getAllBlogPosts.handler
+    events:
+      - http:
+          path: items
+          method: get
+    package:
+      include:
+        - src/getAllBlogPosts.js
+  getBlogPost:
+    handler: src/getBlogPost.handler
+    events:
+      - http:
+          path: items/{id}
+          method: get
+    package:
+      include:
+        - src/getBlogPost.js
+  deleteBlogPost:
+    handler: src/deleteBlogPost.handler
+    events:
+      - http:
+          path: items/{id}
+          method: delete
+    package:
+      include:
+        - src/deleteBlogPost.js
+  createBlogPost:
+    handler: src/createBlogPost.handler
+    events:
+      - http:
+          path: items
+          method: post
+    package:
+      include:
+        - src/createBlogPost.js
+        - node_modules/uuid/** # Needed for ID generation
+resources: # you can add CloudFormation resource templates here
+  Resources:
+    DDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: BlogPosts
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
