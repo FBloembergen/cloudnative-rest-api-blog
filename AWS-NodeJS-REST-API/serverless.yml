@@ -57,6 +57,15 @@ functions:
       include:
         - src/createBlogPost.js
         - node_modules/uuid/** # Needed for ID generation
+  updateBlogPost:
+    handler: src/updateBlogPost.handler
+    events:
+      - http:
+          path: items/{id}
+          method: patch
+    package:
+      include:
+        - src/updateBlogPost.js
 resources: # you can add CloudFormation resource templates here
   Resources:
     DDBTable:

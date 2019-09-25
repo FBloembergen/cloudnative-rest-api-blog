@@ -19,6 +19,7 @@ provider:
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/BlogPosts"
 package:
   # Slower packaging, but smaller individual function sizes
+  # Turn off when having memory problems
   individually: true
 
 functions:
@@ -46,6 +47,12 @@ functions:
       - http:
           path: items
           method: post
+  updateBlogPost:
+    handler: src/updateBlogPost.handler
+    events:
+      - http:
+          path: items/{id}
+          method: patch
 resources: # you can add CloudFormation resource templates here
   Resources:
     DDBTable:
